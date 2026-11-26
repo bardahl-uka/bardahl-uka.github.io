@@ -1,6 +1,6 @@
-const CACHE_NAME = 'bardahl-combined-v27-split-assets';
+const CACHE_NAME = 'bardahl-combined-v28-no-zoom';
 const CACHE_PREFIX = 'bardahl-combined-';
-const CORE = ['./', './index.html', './styles.css', './js/app.js', './js/clock.js', './js/backgrounds.js', './js/opacity-slider.js', './js/rounds-clip.js', './js/report-date-sync.js', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png'];
+const CORE = ['./', './index.html', './styles.css', './js/app.js', './js/clock.js', './js/backgrounds.js', './js/opacity-slider.js', './js/rounds-clip.js', './js/report-date-sync.js', './js/no-zoom.js', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png'];
 const ASSETS_URL = new URL('./assets/', self.registration.scope).href;
 const CORE_URLS = new Set(CORE.map(path => new URL(path, self.registration.scope).href));
 // Supabase client library from CDN: cache it so the app shell can start offline.

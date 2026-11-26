@@ -1,49 +1,10 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#111111"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="BARDAHL Queue"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon-180.png">
 <meta name="description" content="BARDAHL — очередь мастеров, учёт работ и заказов автосервиса."><meta property="og:title" content="BARDAHL — Автосервис"><meta property="og:description" content="Очередь мастеров, учёт работ и заказов."><meta property="og:type" content="website"><meta property="og:image" content="icon-512.png"><link rel="preconnect" href="https://tbkzbypuxrgqwpledwuk.supabase.co" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><title>BARDAHL — Автосервис</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </head>
 <body><header><div class="brandmark"><img src="icon.svg" alt=""><div class="brand">BARDAHL</div></div><div class="sub">ОЧЕРЕДЬ · УЧЁТ РАБОТ И ЗАКАЗОВ</div></header>
 <main><div id="notice" class="banner warn">Подключение к общей очереди…</div>
@@ -66,7 +27,6 @@
   <label>Услуги</label>
   <button id="toggleWorkCatalog" type="button" class="primary" style="width:100%;margin-top:5px;background:#ffd21a;color:#111;font-weight:700;border-color:#ffd21a">Услуги+</button>
   <div id="workCatalogPanel" class="hidden" style="margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:10px"><div class="small" style="margin-bottom:8px">Отметьте услуги и нажмите «Добавить выбранные»</div><div id="workChecklist" class="work-checklist"></div><button id="addCatalogWork" type="button" class="primary" style="width:100%;margin-top:10px">＋ Добавить выбранные</button></div>
-  
   <select id="workService" hidden></select>
   <label for="workComment">Комментарий (после сохранения изменить нельзя)</label><textarea id="workComment" rows="3" maxlength="2000" placeholder="Введите комментарий к работе"></textarea><div id="savedComment" class="hidden" style="white-space:pre-wrap;margin:8px 0;color:var(--muted)"></div>
   <div id="workCart"></div><div class="total" id="workCartTotal">Итого: 0 ₸</div>
@@ -74,12 +34,10 @@
  </div>
  </div>
  <div id="masterDailyServices" class="card"><h2>Статистика за день</h2><div id="masterDailyServicesList"></div></div>
- 
  <h2 id="reportsHeading">Отчёты</h2><div class="card"><div id="masterReportControls"><div class="master-compact-controls"><div class="master-month-tile record-tile"><small>Месяц</small><div class="master-month-nav"><button type="button" id="masterMonthPrev" aria-label="Предыдущий месяц">‹</button><span id="masterMonthLabel" aria-live="polite"></span><button type="button" id="masterMonthNext" aria-label="Следующий месяц">›</button></div></div><div class="report-date-tile record-tile"><label for="reportDate">Дата отчёта</label><div class="report-date-button-wrap"><span id="reportDateDisplay" aria-hidden="true"></span><input id="reportDate" type="date" aria-label="Дата отчёта"></div></div></div><div class="master-month-average record-tile" title="Сумма заказов за месяц, разделённая на количество дней с выполненными заказами"><small>Среднее за день</small><strong id="masterMonthAverage">—</strong></div><details class="master-records-area"><summary class="record-heading">🏆 Мои рекорды <span class="records-chevron" aria-hidden="true">⌄</span></summary><div id="masterRecords" class="record-pair"></div></details></div><div id="workReport" class="stats"></div><div id="leaderControls" class="hidden"><label for="leaderDate">Дата для статистики</label><input id="leaderDate" type="date"><div id="leaderPeriodButtons" class="leader-periods" role="group" aria-label="Период списка мастеров"><button type="button" class="leader-period-btn selected" data-period="day">За день</button><button type="button" class="leader-period-btn" data-period="month">За месяц</button><button type="button" class="leader-period-btn" data-period="year">За год</button></div><div class="small">Статистика и рейтинг выбранного филиала или обоих филиалов.</div></div><div id="leaderRecords" class="hidden"></div><div id="leaderStats" class="history hidden"></div></div><div id="orderHistorySection"><h2>История заказов</h2><input id="orderSearch" placeholder="Марка, модель или госномер" autocomplete="off"><div id="historyControls" class="history-filter-controls"></div><div id="historyScopeHint" class="small history-scope"></div><button id="exportCsv" class="secondary">Экспорт CSV</button><div class="backup-actions"><button id="backup" class="secondary">Резервная копия</button><button id="restoreBtn" class="secondary">Восстановить</button></div><input id="restoreFile" type="file" accept="application/json,.json" hidden><div id="orderHistory"></div></div>
 </div>
 </section>
 <footer>BARDAHL </footer></main><div id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/app.js"></script><script src="js/clock.js"></script><script src="js/backgrounds.js"></script><script src="js/opacity-slider.js"></script><script src="js/rounds-clip.js"></script>
-<script src="js/report-date-sync.js"></script>
-
+<script src="js/report-date-sync.js"></script><script src="js/no-zoom.js"></script>
 </body></html>
