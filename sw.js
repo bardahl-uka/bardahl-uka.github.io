@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bardahl-combined-v28-no-zoom';
+const CACHE_NAME = 'bardahl-combined-v30-price-in-index';
 const CACHE_PREFIX = 'bardahl-combined-';
 const CORE = ['./', './index.html', './styles.css', './js/app.js', './js/clock.js', './js/backgrounds.js', './js/opacity-slider.js', './js/rounds-clip.js', './js/report-date-sync.js', './js/no-zoom.js', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png'];
 const ASSETS_URL = new URL('./assets/', self.registration.scope).href;
