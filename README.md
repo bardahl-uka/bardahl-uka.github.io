@@ -3,10 +3,11 @@
 PWA для автосервиса: очередь по боксам, учёт работ и заказов, отчёты. Бэкенд — Supabase (таблицы `queue_*`, `work_orders`, RPC `branch_queue_action` и др.). Сборки нет: сайт статический, публикуется через GitHub Pages.
 
 ## Структура
-- `index.html` — разметка
+- `index.html` — разметка и **прайс услуг** (блок `WORK_CATALOG`)
 - `styles.css` — все стили (блоки идут в порядке каскада, у каждого комментарий с прежним id)
 - `js/app.js` — основная логика (вход, очередь, заказы, отчёты)
 - `js/clock.js`, `backgrounds.js`, `opacity-slider.js`, `rounds-clip.js`, `report-date-sync.js`, `no-zoom.js` (запрет масштабирования пальцами) — дополнения интерфейса; подключаются в этом порядке
+- `install.html` — страница-ссылка для установки на главный экран (Android: кнопка, iPhone: инструкция)
 - `sw.js` — service worker (офлайн-оболочка). **При изменении любого файла из списка CORE в sw.js поднимайте `CACHE_NAME`.**
 - `manifest.webmanifest`, `icon-*.png` — установка как приложение (есть maskable-иконки)
 
