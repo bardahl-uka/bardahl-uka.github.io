@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bardahl-combined-v31-catalog-window';
+const CACHE_NAME = 'bardahl-combined-v32-revalidate';
 const CACHE_PREFIX = 'bardahl-combined-';
 const CORE = ['./', './index.html', './styles.css', './js/app.js', './js/clock.js', './js/backgrounds.js', './js/opacity-slider.js', './js/rounds-clip.js', './js/report-date-sync.js', './js/no-zoom.js', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png'];
 const ASSETS_URL = new URL('./assets/', self.registration.scope).href;
@@ -36,7 +36,8 @@ self.addEventListener('fetch', event => {
     return;
   }
   if (!CORE_URLS.has(request.url)) return;
-  const network = fetch(request);
+  // 'no-cache': always revalidate with the server (cheap 304 when unchanged), so edits show up right away
+  const network = fetch(request, { cache: 'no-cache' });
   event.waitUntil(network.then(async response => {
     if (response.ok) { const cache = await caches.open(CACHE_NAME); await cache.put(request, response.clone()); }
   }).catch(() => {}));
