@@ -45,7 +45,7 @@
   <label for="employeeBranch">Филиал</label><select id="employeeBranch"><option value="1">Металлургов</option><option value="2">КШТ</option></select>
   <button type="button" class="primary" id="createEmployeeBtn" style="width:100%;margin-top:12px">Добавить мастера</button>
  </div>
- <div class="card"><div class="employee-list-heading"><h2>Сотрудники</h2><button type="button" class="secondary" id="refreshEmployeesBtn">Обновить</button></div><div id="employeesList"><div class="small">Загрузка списка…</div></div></div>
+ <div class="card"><div class="employee-list-heading"><h2>Сотрудники <span id="employeesCount" class="pill">0</span></h2><button type="button" class="secondary" id="refreshEmployeesBtn">Обновить</button></div><div id="employeeBranchButtons" class="leader-periods" role="group" aria-label="Филиал"><button type="button" class="leader-period-btn selected" data-branch="all">Все</button><button type="button" class="leader-period-btn" data-branch="1">Металлургов</button><button type="button" class="leader-period-btn" data-branch="2">КШТ</button></div><div id="employeesList"><div class="small">Загрузка списка…</div></div></div>
 </div>
 </section>
 <footer>BARDAHL </footer></main><div id="toast" role="status" aria-live="polite"></div>
