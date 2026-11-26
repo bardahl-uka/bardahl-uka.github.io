@@ -1,8 +1,10 @@
-const CACHE_NAME = 'bardahl-combined-v26-current-report-date';
+const CACHE_NAME = 'bardahl-combined-v27-split-assets';
 const CACHE_PREFIX = 'bardahl-combined-';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png'];
+const CORE = ['./', './index.html', './styles.css', './js/app.js', './js/clock.js', './js/backgrounds.js', './js/opacity-slider.js', './js/rounds-clip.js', './js/report-date-sync.js', './manifest.webmanifest', './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png'];
 const ASSETS_URL = new URL('./assets/', self.registration.scope).href;
 const CORE_URLS = new Set(CORE.map(path => new URL(path, self.registration.scope).href));
+// Supabase client library from CDN: cache it so the app shell can start offline.
+const SUPABASE_LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js';
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });
@@ -12,6 +14,17 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
+  if (request.url.startsWith(SUPABASE_LIB)) {
+    // network first, fall back to the cached copy when offline
+    event.respondWith(fetch(request).then(async response => {
+      if (response && (response.ok || response.type === 'opaque')) { const cache = await caches.open(CACHE_NAME); cache.put(request, response.clone()); }
+      return response;
+    }).catch(async () => {
+      const cached = await (await caches.open(CACHE_NAME)).match(request);
+      return cached || Response.error();
+    }));
+    return;
+  }
   if (request.url.startsWith(ASSETS_URL)) {
     event.respondWith(caches.open(CACHE_NAME).then(async cache => {
       const cached = await cache.match(request);
@@ -34,4 +47,3 @@ self.addEventListener('fetch', event => {
     return Response.error();
   }));
 });
-
