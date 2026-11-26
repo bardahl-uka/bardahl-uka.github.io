@@ -39,12 +39,10 @@
 <div id="employeesPage" class="hidden">
  <div class="card employee-create-card">
   <h2>Добавить мастера</h2>
-  <p class="small">Создайте личную учётную запись. При первом входе мастер должен сменить временный пароль.</p>
   <label for="employeeName">Имя и фамилия</label><input id="employeeName" autocomplete="name" maxlength="100" placeholder="Например, Иванов Иван">
   <label for="employeeEmail">Электронная почта</label><input id="employeeEmail" type="email" autocomplete="off" maxlength="254" placeholder="master@example.com">
   <label for="employeeTempPassword">Временный пароль</label><input id="employeeTempPassword" type="text" autocomplete="off" minlength="10" placeholder="Не менее 10 символов">
   <label for="employeeBranch">Филиал</label><select id="employeeBranch"><option value="1">Металлургов</option><option value="2">КШТ</option></select>
-  <div class="small employee-role-note">Роль будет назначена автоматически: Мастер. Создание менеджеров из этого раздела недоступно.</div>
   <button type="button" class="primary" id="createEmployeeBtn" style="width:100%;margin-top:12px">Добавить мастера</button>
  </div>
  <div class="card"><div class="employee-list-heading"><h2>Сотрудники</h2><button type="button" class="secondary" id="refreshEmployeesBtn">Обновить</button></div><div id="employeesList"><div class="small">Загрузка списка…</div></div></div>
