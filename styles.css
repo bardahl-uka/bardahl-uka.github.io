@@ -961,5 +961,17 @@ main>footer,footer{display:block!important;width:100%!important;text-align:cente
 /* ПК, руководитель и менеджер: компактный вид (как масштаб браузера 80%) */
 @media(min-width:701px){
 body.is-staff>header,body.is-staff>main{zoom:.8}
-body.is-staff h2,body.is-staff #queueTableCard h2,body.is-staff #myPanelCard h2,body.is-staff #reportsHeading,body.is-staff #employeesPage h2{font-size:16px!important}
+/* единый размер заголовков */
+body.is-staff h2,body.is-staff #queueTableCard h2,body.is-staff #myPanelCard h2,body.is-staff #reportsHeading,body.is-staff #employeesPage h2{font-size:17px!important}
+/* три вкладки одинаковые */
+body.is-staff .app-tabs button,body.is-staff #tabQueue,body.is-staff #tabOrders,body.is-staff #tabEmployees{font-size:17px!important;font-weight:800!important;min-height:55px!important}
+/* читаемость мелкого текста */
+body.is-staff header .sub{font-size:14px!important;letter-spacing:.3px}
+body.is-staff label,body.is-staff #branchControls label{font-size:14px!important}
+body.is-staff #branchControls strong{font-size:16px!important}
+body.is-staff #queueTableCard .queue-name-mini{font-size:15px!important;font-weight:700!important;line-height:1.2!important;max-width:150px!important;color:#fff!important}
+body.is-staff #queueTableCard .queue-table thead th{font-size:14px!important}
+body.is-staff #queueTableCard .service-chip .chip-copy>span,body.is-staff #queueTableCard .service-chip .chip-copy small,body.is-staff #queueTableCard .chip-copy{font-size:14px!important}
+body.is-staff .employee-name{font-size:17px!important}
+body.is-staff .employee-meta,body.is-staff .employee-status{font-size:14px!important}
 }
