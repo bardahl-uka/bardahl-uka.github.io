@@ -37,18 +37,38 @@
  <h2 id="reportsHeading">Отчёты</h2><div class="card"><div id="masterReportControls"><div class="master-compact-controls"><div class="master-month-tile record-tile"><small>Месяц</small><div class="master-month-nav"><button type="button" id="masterMonthPrev" aria-label="Предыдущий месяц">‹</button><span id="masterMonthLabel" aria-live="polite"></span><button type="button" id="masterMonthNext" aria-label="Следующий месяц">›</button></div></div><div class="report-date-tile record-tile"><label for="reportDate">Дата отчёта</label><div class="report-date-button-wrap"><span id="reportDateDisplay" aria-hidden="true"></span><input id="reportDate" type="date" aria-label="Дата отчёта"></div></div></div><div class="master-month-average record-tile" title="Сумма заказов за месяц, разделённая на количество дней с выполненными заказами"><small>Среднее за день</small><strong id="masterMonthAverage">—</strong></div><details class="master-records-area"><summary class="record-heading">🏆 Мои рекорды <span class="records-chevron" aria-hidden="true">⌄</span></summary><div id="masterRecords" class="record-pair"></div></details></div><div id="workReport" class="stats"></div><div id="leaderControls" class="hidden"><label for="leaderDate">Дата для статистики</label><input id="leaderDate" type="date"><div id="leaderPeriodButtons" class="leader-periods" role="group" aria-label="Период списка мастеров"><button type="button" class="leader-period-btn selected" data-period="day">За день</button><button type="button" class="leader-period-btn" data-period="month">За месяц</button><button type="button" class="leader-period-btn" data-period="year">За год</button></div><div class="small">Статистика и рейтинг выбранного филиала или обоих филиалов.</div></div><div id="leaderRecords" class="hidden"></div><div id="leaderStats" class="history hidden"></div></div><div id="orderHistorySection"><h2>История заказов</h2><input id="orderSearch" placeholder="Марка, модель или госномер" autocomplete="off"><div id="historyControls" class="history-filter-controls"></div><div id="historyScopeHint" class="small history-scope"></div><button id="exportCsv" class="secondary">Экспорт CSV</button><div class="backup-actions"><button id="backup" class="secondary">Резервная копия</button><button id="restoreBtn" class="secondary">Восстановить</button></div><input id="restoreFile" type="file" accept="application/json,.json" hidden><div id="orderHistory"></div></div>
 </div>
 <div id="employeesPage" class="hidden">
- <div class="card employee-create-card">
-  <h2>Добавить мастера</h2>
-  <label for="employeeName">Имя и фамилия</label><input id="employeeName" autocomplete="name" maxlength="100" placeholder="Например, Иванов Иван">
-  <label for="employeeEmail">Электронная почта</label><input id="employeeEmail" type="email" autocomplete="off" maxlength="254" placeholder="master@example.com">
-  <label for="employeeTempPassword">Временный пароль</label><input id="employeeTempPassword" type="text" autocomplete="off" minlength="10" placeholder="Не менее 10 символов">
-  <label for="employeeBranch">Филиал</label><select id="employeeBranch"><option value="1">Металлургов</option><option value="2">КШТ</option></select>
-  <button type="button" class="primary" id="createEmployeeBtn" style="width:100%;margin-top:12px">Добавить мастера</button>
+ <div class="card employee-list-card">
+  <div class="employee-list-heading"><h2><span class="employee-title-icon" aria-hidden="true">👥</span>Сотрудники <span id="employeesCount" class="pill">0</span></h2><div class="employee-head-actions"><button type="button" class="secondary" id="refreshEmployeesBtn">Обновить</button><button type="button" class="primary" id="addEmployeeBtn">＋ Добавить сотрудника</button></div></div>
+  <div id="employeeBranchButtons" class="leader-periods" role="group" aria-label="Филиал"><button type="button" class="leader-period-btn selected" data-branch="all">Все</button><button type="button" class="leader-period-btn" data-branch="1">Металлургов</button><button type="button" class="leader-period-btn" data-branch="2">КШТ</button></div>
+  <div id="employeesList"><div class="small">Загрузка списка…</div></div>
  </div>
- <div class="card"><div class="employee-list-heading"><h2>Сотрудники <span id="employeesCount" class="pill">0</span></h2><button type="button" class="secondary" id="refreshEmployeesBtn">Обновить</button></div><div id="employeeBranchButtons" class="leader-periods" role="group" aria-label="Филиал"><button type="button" class="leader-period-btn selected" data-branch="all">Все</button><button type="button" class="leader-period-btn" data-branch="1">Металлургов</button><button type="button" class="leader-period-btn" data-branch="2">КШТ</button></div><div id="employeesList"><div class="small">Загрузка списка…</div></div></div>
 </div>
 </section>
-<footer>BARDAHL </footer></main><div id="toast" role="status" aria-live="polite"></div>
+<footer>BARDAHL </footer></main><div id="employeeModal" class="employee-modal hidden" role="dialog" aria-modal="true" aria-labelledby="employeeModalTitle">
+ <div class="employee-modal-box">
+  <div class="employee-modal-head"><h3 id="employeeModalTitle">Добавить сотрудника</h3><button type="button" id="employeeModalClose" class="employee-icon-btn" aria-label="Закрыть">✕</button></div>
+  <div class="employee-modal-body" id="employeeModalBody">
+   <div class="employee-form-col">
+    <div class="employee-two"><div><label for="employeeFirst">Имя</label><input id="employeeFirst" maxlength="50" autocomplete="off" placeholder="Иван"></div><div><label for="employeeLast">Фамилия</label><input id="employeeLast" maxlength="50" autocomplete="off" placeholder="Петров"></div></div>
+    <label for="employeeEmail">Email</label><input id="employeeEmail" type="email" autocomplete="off" maxlength="254" placeholder="master@example.com">
+    <div class="employee-two"><div><label for="employeeRole">Роль</label><select id="employeeRole" disabled><option>Мастер</option></select></div><div><label for="employeeBranch">Филиал</label><select id="employeeBranch"><option value="1">Металлургов</option><option value="2">КШТ</option></select></div></div>
+    <label for="employeeTempPassword" id="employeePasswordLabel">Временный пароль</label>
+    <div class="employee-pass"><input id="employeeTempPassword" type="password" autocomplete="new-password" minlength="10" placeholder="Не менее 10 символов"><button type="button" id="employeePassToggle" class="employee-pass-eye" aria-label="Показать пароль">👁</button></div>
+    <label class="employee-check"><input type="checkbox" id="employeeMustChange" checked><span>Обязательная смена пароля при входе</span></label>
+   </div>
+   <div class="employee-side-col" id="employeeSideCol">
+    <div class="employee-side-box"><div class="employee-side-title">Статус сотрудника</div><label class="employee-switch"><input type="checkbox" id="employeeActiveToggle" checked><span class="employee-switch-track"></span><b id="employeeActiveText">Активен</b></label></div>
+    <div class="employee-side-box"><div class="employee-side-title">Дополнительные действия</div>
+     <button type="button" class="employee-action" id="employeeResetPass"><b>Сбросить пароль</b><small>Создать новый временный пароль</small></button>
+     <button type="button" class="employee-action" id="employeeBlockBtn"><b>Заблокировать</b><small>Временно запретить вход в приложение</small></button>
+     <button type="button" class="employee-action danger-action" id="employeeDeleteBtn"><b>Удалить</b><small>В архив, история сохранится</small></button>
+    </div>
+   </div>
+  </div>
+  <div class="employee-modal-foot"><button type="button" class="secondary" id="employeeCancel">Отмена</button><button type="button" class="primary" id="employeeSave">Сохранить</button></div>
+ </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 // ПРАЙС УСЛУГ: ["название", цена в тенге]. Меняйте только текст в кавычках и число.
 // Строку «Услуга СТО» с ценой 0 не удаляйте: цена для неё вводится вручную в заказе.
