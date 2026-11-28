@@ -1037,3 +1037,23 @@ body.is-staff .employee-meta,body.is-staff .employee-status{font-size:14px!impor
 .employee-modal-foot button{min-width:150px}
 @media(max-width:700px){.employee-modal-body{grid-template-columns:1fr}.employee-two{grid-template-columns:1fr}.employee-modal-foot button{flex:1;min-width:0}}
 body.is-staff .employee-name{font-size:17px!important}
+
+/* Сотрудники: компактные карточки (одна кнопка ✎, статус в строке тегов) */
+.employee-row{flex-wrap:nowrap!important;gap:10px;padding:8px 10px;margin-top:8px;border-radius:12px}
+.employee-avatar{width:36px;height:36px;font-size:15px}
+.employee-main .employee-name{font-size:15px!important;line-height:1.2}
+.employee-main .employee-meta{font-size:12px!important;margin-top:1px;line-height:1.25}
+.employee-tags{gap:6px 8px;margin-top:4px;font-size:12px}
+.employee-role-tag{padding:2px 8px;font-size:11px}
+.employee-branch{padding-left:8px}
+.employee-tags .employee-state{font-size:12px!important;gap:5px;order:0}
+.employee-dot{width:8px;height:8px}
+.employee-actions{margin-left:auto;align-self:center;width:auto!important;flex:0 0 auto;padding:0!important}
+.employee-icon-btn{width:36px;height:36px;min-height:36px;font-size:16px}
+#employeesPage .employee-list-card{padding:12px}
+.employee-list-heading h2{font-size:17px!important}
+.employee-head-actions{width:100%}
+.employee-head-actions button{flex:1;min-height:38px;padding:7px 10px;font-size:13px}
+#employeeBranchButtons{margin:8px 0 4px}
+#employeeBranchButtons .leader-period-btn{min-height:36px;padding:6px 4px;font-size:13px}
+@media(min-width:701px){.employee-head-actions{width:auto;margin-left:auto}.employee-head-actions button{flex:0 0 auto;padding:7px 14px}}
