@@ -162,6 +162,19 @@ Deno.serve(async (req: Request) => {
         .from("branches").select("id").eq("id", branch_id).maybeSingle();
       if (branchError || !branch) return reply(400, { error: "Выбранный филиал не найден" });
 
+      const nameChanged = display_name !== String(target.display_name || "");
+      if (nameChanged) {
+        const { data: sameName, error: sameError } = await admin
+          .from("user_profiles").select("user_id")
+          .eq("role", "master").eq("branch_id", branch_id).is("deleted_at", null)
+          .ilike("display_name", display_name.replace(/[\\%_]/g, "\\$&"))
+          .neq("user_id", targetId).limit(1);
+        if (sameError) throw sameError;
+        if (sameName && sameName.length) {
+          return reply(400, { error: "В этом филиале уже есть сотрудник с таким именем" });
+        }
+      }
+
       const emailChanged = email !== String(target.email || "").toLowerCase();
       if (emailChanged || password) {
         const authChanges: Record<string, unknown> = {};
@@ -171,11 +184,35 @@ Deno.serve(async (req: Request) => {
         if (authError) return reply(400, { error: authError.message || "Не удалось изменить учётную запись" });
       }
 
+      // The name is the key of history in orders/queue logs: carry the history over to the new name.
+      let renamed: Record<string, number> | null = null;
+      if (nameChanged) {
+        const { data: renameResult, error: renameError } = await admin.rpc("bardahl_rename_master", {
+          p_user_id: targetId,
+          p_old: String(target.display_name || ""),
+          p_new: display_name,
+          p_branch: Number(target.branch_id),
+        });
+        if (renameError) {
+          if (emailChanged) await admin.auth.admin.updateUserById(targetId, { email: String(target.email || ""), email_confirm: true });
+          throw renameError;
+        }
+        renamed = renameResult as Record<string, number>;
+      }
+
       const profileChanges: Record<string, unknown> = { display_name, email, branch_id, queue_branch_id: branch_id };
       if (password) profileChanges.must_change_password = body.must_change_password !== false;
       const { error: profileError } = await admin.from("user_profiles")
         .update(profileChanges).eq("user_id", targetId).is("deleted_at", null);
       if (profileError) {
+        if (nameChanged) {
+          await admin.rpc("bardahl_rename_master", {
+            p_user_id: targetId,
+            p_old: display_name,
+            p_new: String(target.display_name || ""),
+            p_branch: Number(target.branch_id),
+          });
+        }
         if (emailChanged) await admin.auth.admin.updateUserById(targetId, { email: String(target.email || ""), email_confirm: true });
         throw profileError;
       }
@@ -184,9 +221,12 @@ Deno.serve(async (req: Request) => {
         actor_user_id: actor.user_id,
         target_user_id: targetId,
         action: "update",
-        details: { display_name, email, branch_id, password_changed: Boolean(password) },
+        details: {
+          display_name, email, branch_id, password_changed: Boolean(password),
+          ...(nameChanged ? { old_display_name: target.display_name, renamed } : {}),
+        },
       });
-      return reply(200, { ok: true });
+      return reply(200, { ok: true, renamed });
     }
 
     if (action === "reset_password") {
