@@ -106,7 +106,7 @@ Deno.serve(async (req: Request) => {
         email,
         display_name,
         role: "master",
-        must_change_password: true,
+        must_change_password: body.must_change_password !== false,
         branch_id,
         queue_branch_id: branch_id,
         is_active: true,
@@ -134,11 +134,79 @@ Deno.serve(async (req: Request) => {
 
     const { data: target, error: targetError } = await admin
       .from("user_profiles")
-      .select("user_id,role,is_active,deleted_at,display_name")
+      .select("user_id,role,is_active,deleted_at,display_name,email,branch_id")
       .eq("user_id", targetId)
       .maybeSingle();
     if (targetError || !target || target.role !== "master") {
       return reply(404, { error: "Сотрудник не найден" });
+    }
+
+    if (action === "update") {
+      if (target.deleted_at) return reply(400, { error: "Архивированного сотрудника нельзя редактировать" });
+      const display_name = String(body.display_name || "").trim();
+      const email = String(body.email || "").trim().toLowerCase();
+      const branch_id = Number(body.branch_id);
+      const password = String(body.password || "");
+      if (display_name.length < 2 || display_name.length > 100) {
+        return reply(400, { error: "Укажите фамилию и имя сотрудника (2–100 символов)" });
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+        return reply(400, { error: "Проверьте электронную почту" });
+      }
+      if (![1, 2].includes(branch_id)) return reply(400, { error: "Выберите действующий филиал" });
+      if (password && (password.length < 10 || password.length > 128)) {
+        return reply(400, { error: "Пароль должен содержать от 10 до 128 символов" });
+      }
+
+      const { data: branch, error: branchError } = await admin
+        .from("branches").select("id").eq("id", branch_id).maybeSingle();
+      if (branchError || !branch) return reply(400, { error: "Выбранный филиал не найден" });
+
+      const emailChanged = email !== String(target.email || "").toLowerCase();
+      if (emailChanged || password) {
+        const authChanges: Record<string, unknown> = {};
+        if (emailChanged) { authChanges.email = email; authChanges.email_confirm = true; }
+        if (password) authChanges.password = password;
+        const { error: authError } = await admin.auth.admin.updateUserById(targetId, authChanges);
+        if (authError) return reply(400, { error: authError.message || "Не удалось изменить учётную запись" });
+      }
+
+      const profileChanges: Record<string, unknown> = { display_name, email, branch_id, queue_branch_id: branch_id };
+      if (password) profileChanges.must_change_password = body.must_change_password !== false;
+      const { error: profileError } = await admin.from("user_profiles")
+        .update(profileChanges).eq("user_id", targetId).is("deleted_at", null);
+      if (profileError) {
+        if (emailChanged) await admin.auth.admin.updateUserById(targetId, { email: String(target.email || ""), email_confirm: true });
+        throw profileError;
+      }
+
+      await admin.from("employee_audit_log").insert({
+        actor_user_id: actor.user_id,
+        target_user_id: targetId,
+        action: "update",
+        details: { display_name, email, branch_id, password_changed: Boolean(password) },
+      });
+      return reply(200, { ok: true });
+    }
+
+    if (action === "reset_password") {
+      if (target.deleted_at) return reply(400, { error: "Архивированному сотруднику нельзя сбросить пароль" });
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+      const bytes = new Uint8Array(12);
+      crypto.getRandomValues(bytes);
+      const password = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+      const { error: pwError } = await admin.auth.admin.updateUserById(targetId, { password });
+      if (pwError) throw pwError;
+      const { error } = await admin.from("user_profiles")
+        .update({ must_change_password: true }).eq("user_id", targetId);
+      if (error) throw error;
+      await admin.from("employee_audit_log").insert({
+        actor_user_id: actor.user_id,
+        target_user_id: targetId,
+        action: "reset_password",
+        details: { display_name: target.display_name },
+      });
+      return reply(200, { ok: true, password });
     }
 
     if (action === "block") {
